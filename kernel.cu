@@ -148,7 +148,7 @@ cudaError_t GPU(float* HOGfeatures, float* nn, const int people, const int image
         goto Error;
     }
 
-    // Allocate GPU buffers for three vectors (two input, one output)    .
+    // Allocate GPU buffers
     cudaStatus = cudaMalloc((void**)&dev_features, people * images * featureSize * sizeof(float));
     if (cudaStatus != cudaSuccess) {
         fprintf(stderr, "cudaMalloc failed!");
@@ -186,7 +186,7 @@ cudaError_t GPU(float* HOGfeatures, float* nn, const int people, const int image
         goto Error;
     }
 
-    // Launch a kernel on the GPU with one thread for each element.
+    // Launch kernels on the GPU 
 
     for (int i = 0; i < count; i++) {
         int person = rand() % people;
@@ -208,18 +208,11 @@ cudaError_t GPU(float* HOGfeatures, float* nn, const int people, const int image
         }
     }
 
-    // Check for any errors launching the kernel
-    cudaStatus = cudaGetLastError();
-    if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "trainNNgpu launch failed: %s\n", cudaGetErrorString(cudaStatus));
-        goto Error;
-    }
-
-    // cudaDeviceSynchronize waits for the kernel to finish, and returns
+    // cudaDeviceSynchronize waits for the kernels to finish, and returns
     // any errors encountered during the launch.
     cudaStatus = cudaDeviceSynchronize();
     if (cudaStatus != cudaSuccess) {
-        fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching trainNNgpu!\n", cudaStatus);
+        fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching kernels!\n", cudaStatus);
         goto Error;
     }
 
